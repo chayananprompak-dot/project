@@ -1,0 +1,136 @@
+package com.example.deliverytracker
+
+import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+
+class OrderTrackingActivity : AppCompatActivity() {
+
+    private lateinit var lineProgress: View
+    private lateinit var txtStatusTitle: TextView
+    private lateinit var txtStatusSubtitle: TextView
+
+    private lateinit var stepContainers: List<LinearLayout>
+    private lateinit var stepCircles: List<TextView>
+    private lateinit var stepLabels: List<TextView>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_order_tracking)
+
+        initViews()
+        setupListeners()
+
+        // ตั้งค่าเริ่มต้นที่สถานะ "Preparing" (ขั้นตอนที่ 1)
+        updateStatus(1)
+    }
+
+    private fun initViews() {
+        // ปุ่มกดย้อนกลับ
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
+
+        lineProgress = findViewById(R.id.lineProgress)
+        txtStatusTitle = findViewById(R.id.txtStatusTitle)
+        txtStatusSubtitle = findViewById(R.id.txtStatusSubtitle)
+
+        // เชื่อม Container ของแต่ละขั้นตอน
+        stepContainers = listOf(
+            findViewById(R.id.stepConfirmed),
+            findViewById(R.id.stepPreparing),
+            findViewById(R.id.stepOnTheWay),
+            findViewById(R.id.stepDelivered)
+        )
+
+        // เชื่อมวงกลมไอคอน
+        stepCircles = listOf(
+            findViewById(R.id.step1Circle),
+            findViewById(R.id.step2Circle),
+            findViewById(R.id.step3Circle),
+            findViewById(R.id.step4Circle)
+        )
+
+        // เชื่อมข้อความใต้ไอคอน
+        stepLabels = listOf(
+            findViewById(R.id.txtStep1),
+            findViewById(R.id.txtStep2),
+            findViewById(R.id.txtStep3),
+            findViewById(R.id.txtStep4)
+        )
+    }
+
+    private fun setupListeners() {
+        // ให้สามารถกดแตะที่แต่ละปุ่มเพื่อเปลี่ยนสถานะได้จริง
+        stepContainers.forEachIndexed { index, container ->
+            container.setOnClickListener {
+                updateStatus(index)
+            }
+        }
+    }
+
+    private fun updateStatus(step: Int) {
+        val colorActiveAmber = Color.parseColor("#E8A858")
+        val colorDarkInactive = Color.parseColor("#4A342D")
+        val colorTextActive = Color.parseColor("#F5EDE4")
+        val colorTextInactive = Color.parseColor("#8C7A6E")
+        val colorDarkBg = Color.parseColor("#231815")
+
+        val titles = listOf(
+            "รับออเดอร์เรียบร้อยแล้ว",
+            "กำลังจัดเตรียมกาแฟของคุณ",
+            "สินค้ากำลังเดินทางนำส่ง",
+            "จัดส่งสินค้าสำเร็จเรียบร้อย"
+        )
+        val subtitles = listOf(
+            "ร้านค้าได้รับคำสั่งซื้อของคุณแล้ว",
+            "บาริสต้ากำลังรังสรรค์เมนูอย่างพิถีพิถัน",
+            "ไรเดอร์รับสินค้าและกำลังนำไปส่งให้คุณ",
+            "ขอให้มีความสุขกับเครื่องดื่มแก้วโปรด!"
+        )
+
+        txtStatusTitle.text = titles[step]
+        txtStatusSubtitle.text = subtitles[step]
+
+        // อัปเดตสีของวงกลมและข้อความ
+        for (i in stepCircles.indices) {
+            if (i <= step) {
+                stepCircles[i].background = ContextCompat.getDrawable(this, R.drawable.bg_circle_white)
+                stepCircles[i].backgroundTintList = android.content.res.ColorStateList.valueOf(colorActiveAmber)
+                stepCircles[i].setTextColor(colorDarkBg)
+
+                stepLabels[i].setTextColor(colorTextActive)
+                stepLabels[i].setTypeface(null, Typeface.BOLD)
+            } else {
+                stepCircles[i].background = ContextCompat.getDrawable(this, R.drawable.bg_circle_white)
+                stepCircles[i].backgroundTintList = android.content.res.ColorStateList.valueOf(colorDarkInactive)
+                stepCircles[i].setTextColor(colorTextInactive)
+
+                stepLabels[i].setTextColor(colorTextInactive)
+                stepLabels[i].setTypeface(null, Typeface.NORMAL)
+            }
+        }
+
+        // เชื่อมปลายเส้น Progress ไปยัง container ของสเต็ปเป้าหมาย
+        val targetStepContainerId = when (step) {
+            0 -> R.id.stepConfirmed
+            1 -> R.id.stepPreparing
+            2 -> R.id.stepOnTheWay
+            else -> R.id.stepDelivered
+        }
+
+        val params = lineProgress.layoutParams as ConstraintLayout.LayoutParams
+        params.endToEnd = targetStepContainerId
+        lineProgress.layoutParams = params
+
+        Toast.makeText(this, "อัปเดต: ${titles[step]}", Toast.LENGTH_SHORT).show()
+    }
+}
