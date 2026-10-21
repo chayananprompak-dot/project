@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bakery_bg">#3E3231</color>
+    <color name="bakery_card">#E8B4B8</color>
+    <color name="bakery_cream">#F5EBE6</color>
+    <color name="bakery_pink">#E0C2C0</color>
+    <color name="bakery_dark">#2A1B17</color>
+    <color name="bakery_brown">#5C403C</color>
+    <color name="cream_bg">#FAF6F0</color>
+    <color name="white">#FFFFFF</color>
+
+
+    <color name="checklist_color_bg">#F7F3EB</color>
+    <color name="checklist_color_card_bg">#FFFFFF</color>
+    <color name="checklist_color_primary">#7B4E38</color>
+    <color name="checklist_color_primary_light">#EFE8DC</color>
+    <color name="checklist_color_header_title">#2E1C14</color>
+    <color name="checklist_color_header_sub">#756863</color>
+    <color name="checklist_color_hint">#AFA59B</color>
+    <color name="checklist_color_border">#EAE1D3</color>
+    <color name="checklist_color_white">#FFFFFF</color>
+</resources>
