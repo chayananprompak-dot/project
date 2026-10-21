@@ -1,0 +1,42 @@
+package com.example.sweetovenbakery
+
+import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+
+class MainActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val etEmployeeId = findViewById<TextInputEditText>(R.id.etEmployeeId)
+        val etPassword = findViewById<TextInputEditText>(R.id.etPassword)
+        val btnLogin = findViewById<MaterialButton>(R.id.btnLogin)
+
+        btnLogin.setOnClickListener {
+            val employeeId = etEmployeeId.text?.toString()?.trim().orEmpty()
+            val password = etPassword.text?.toString()?.trim().orEmpty()
+
+            when {
+                employeeId.isEmpty() -> {
+                    etEmployeeId.error = "กรุณากรอกรหัสพนักงาน"
+                    etEmployeeId.requestFocus()
+                }
+                password.isEmpty() -> {
+                    etPassword.error = "กรุณากรอกรหัสผ่าน"
+                    etPassword.requestFocus()
+                }
+                else -> {
+                    if (employeeId == "EMP001" && password == "123456") {
+                        Toast.makeText(this, "เข้าสู่ระบบสำเร็จ!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "รหัสพนักงานหรือรหัสผ่านไม่ถูกต้อง", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+}
